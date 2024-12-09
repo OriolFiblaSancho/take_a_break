@@ -6,6 +6,9 @@
 ## Features
 - Dark/Light mode
 
+## Try it !!!
+[Try "Take a Break" here!](https://oriol-fibla.itch.io/take-a-break)
+
 ## Installation
 1. Clone the repository:
     ```bash
