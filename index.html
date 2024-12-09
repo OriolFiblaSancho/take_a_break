@@ -1,0 +1,115 @@
+<html>
+    <head>
+        <title>Take a break</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        
+        <div id="main">
+            <button id="dark_light_mode"><img src="img/dark.svg"></button>
+
+            <div class="main">
+                <button id="take_a_break">TAKE A BREAK</button>
+                <p id="id1"></p>
+                <p id="count" style="display: none;"></p>
+            </div>
+        </div>
+        <script>
+            let timeLeft = 120;
+            
+            const dark_light_mode = document.getElementById("dark_light_mode");
+            dark_light_mode.addEventListener("click", function() {
+                const body = document.querySelector("body");
+                const img = dark_light_mode.querySelector("img");
+                if (body.classList.contains("dark")) {
+                    body.classList.remove("dark");
+                    img.src = "img/dark.svg";
+                    document.querySelectorAll("body").forEach((element) => {
+                        element.style.filter = "invert(0)";
+                        element.style.backgroundColor = "white";
+                        element.style.transition = "all 0.5s";
+                    });
+                } else {
+                    body.classList.add("dark");
+                    img.src = "img/light.svg";
+                    document.querySelectorAll("body").forEach((element) => {
+                        element.style.filter = "invert(1)";
+                        element.style.backgroundColor = "black";
+                        element.style.transition = "all 0.5s";
+                    });
+                }
+            });
+
+
+
+            const back_count = document.getElementById("count");
+            
+
+            function writeText(phrases, phraseIndex, charIndex) {
+                if (phraseIndex < phrases.length) {
+                    const text = phrases[phraseIndex];
+                    if (charIndex === 0) {
+                        document.getElementById("id1").innerHTML = ""; // Limpiar el contenido antes de escribir la nueva frase
+                    }
+                    if (charIndex < text.length) {
+                        document.getElementById("id1").innerHTML += text.charAt(charIndex);
+                        setTimeout(function() {
+                            const sound = new Audio("sounds/morse.wav");
+                            sound.volume = 0.05;
+                            sound.play();
+                            writeText(phrases, phraseIndex, charIndex + 1);
+                        }, 120);
+                    } else {
+                        setTimeout(function() {
+                            writeText(phrases, phraseIndex + 1, 0);
+                        }, 2000);
+                    }
+                } else {
+                    document.getElementById("id1").style.display = "none";
+                    back_count.style.display = "block"; // Mostrar el contador cuando finalicen las frases
+                    const timer = setInterval(function() {
+                
+                        if (timeLeft <= 0) {
+                            back_count.innerHTML = "";
+                            clearInterval(timer);
+                            writeText(["I hope you enjoyed your break, don't stop chilling"], 0, 0);
+                        } else {
+                            const minutes = Math.floor(timeLeft / 60);
+                            const seconds = timeLeft % 60;
+                            back_count.innerHTML = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                            timeLeft--;
+                        }
+                    }, 1000);
+                    }
+            }
+
+            
+
+            document.getElementById("take_a_break").addEventListener("click", function() {
+                document.getElementById("take_a_break").style.display = "none";
+
+                const phrases = [
+                    "Hey man how are you ?",
+                    "There's a lot of things going on lately right ?",
+                    "But you know what ?",
+                    "It's okay to take a break",
+                    "This is gonna be an experiment",
+                    "Let's see if you can chill for a while",
+                    "Just relax and enjoy the moment",
+                    "I'm gonna give you two minutes",
+                    "Keep away all the things that can distract you",
+                    "Just chill . . ."
+                ];
+
+                document.getElementById("id1").style.display = "block";
+                writeText(phrases, 0, 0);
+            });
+        </script>
+    </body>
+</html>
